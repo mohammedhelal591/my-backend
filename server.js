@@ -26,11 +26,15 @@ const bcrypt = require("bcrypt");
 const User = require("./models/User");
 
 app.post("/register", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, password: hashedPassword });
+    const newUser = new User({
+      email,
+      password: hashedPassword,
+      username: email,
+    });
     await newUser.save();
     // If registration is successful
     res.status(201).json({ success: true, message: "success" });
@@ -43,20 +47,19 @@ app.post("/register", async (req, res) => {
 const jwt = require("jsonwebtoken");
 
 app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ error: "User not found" });
     }
 
     // If login is successful
-    res.status(200).json({
-      success: true,
-      message: "success",
-      token: generatedToken,
-    });
+    // res.status(200).json({
+    //   success: true,
+    //   message: "success",
+    // });
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
@@ -66,7 +69,7 @@ app.post("/login", async (req, res) => {
     const token = jwt.sign({ userId: user._id }, "your-secret-key", {
       expiresIn: "1h",
     });
-    res.json({ token });
+    return res.status(200).json({ token, success: true, message: "success" });
   } catch (error) {
     res.status(500).json({ error: error });
   }
