@@ -37,10 +37,10 @@ app.post("/register", async (req, res) => {
     });
     await newUser.save();
     // If registration is successful
-    res.status(201).json({ success: true, message: "success" });
-    res.status(201).json({ message: "User registered successfully" });
+    // res.status(201).json({ success: true, message: "success" });
+    return res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    res.status(500).json({ error: "An error occurred" });
+    return res.status(500).json({ error: "An error occurred" });
   }
 });
 
@@ -55,12 +55,6 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ error: "User not found" });
     }
 
-    // If login is successful
-    // res.status(200).json({
-    //   success: true,
-    //   message: "success",
-    // });
-
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       return res.status(401).json({ error: "Invalid credentials" });
@@ -71,7 +65,7 @@ app.post("/login", async (req, res) => {
     });
     return res.status(200).json({ token, success: true, message: "success" });
   } catch (error) {
-    res.status(500).json({ error: error });
+    return res.status(500).json({ error: error });
   }
 });
 
