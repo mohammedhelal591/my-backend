@@ -14,6 +14,10 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
+app.get("/", (req, res) => {
+  return res.json({ message: "working...!" });
+});
+
 const uri =
   "mongodb+srv://admin:yT0GLc05LNI1ohDi@userdb.udxsivq.mongodb.net/?retryWrites=true&w=majority";
 
