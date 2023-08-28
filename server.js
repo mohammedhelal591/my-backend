@@ -106,7 +106,4 @@ app.get("/protected", authenticateToken, (req, res) => {
 //   console.log(`Server is running on port ${PORT}`);
 // });
 
-var server = http.createServer(app)
-server.listen(app.get('port'), () => {
-  console.log('Express server listening on port ' + app.get('port'))
-})
+module.exports = app;
