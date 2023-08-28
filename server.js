@@ -1,18 +1,11 @@
 const express = require("express");
 const cors = require("cors"); // Import the cors package
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Middleware
-app.use(express.json());
-// Use the cors middleware
-app.use(cors());
-
-// Your routes and other code will go here
-
-app.get("/", (req, res) => {
-  return res.json({ message: "working...!" });
-});
+const PORT = process.env.PORT || 6000;
+const crypto = require("crypto");
+const bcrypt = require("bcrypt");
+const User = require("./models/User");
+const jwt = require("jsonwebtoken");
 
 const uri =
   "mongodb+srv://admin:yT0GLc05LNI1ohDi@userdb.udxsivq.mongodb.net/?retryWrites=true&w=majority";
@@ -25,8 +18,24 @@ mongoose.connect(uri, {
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
-const bcrypt = require("bcrypt");
-const User = require("./models/User");
+// Generate a random secret key
+const secretKey = crypto.randomBytes(32).toString("hex");
+
+const allowedOrigins = ["https://mohammedhelal591.github.io/my-movies-app/"];
+
+
+// Middleware
+app.use(express.json());
+// Use the cors middleware
+app.use(
+  cors({
+    origin: allowedOrigins,
+  })
+);
+
+app.get("/", (req, res) => {
+  return res.json({ message: "working...!" });
+});
 
 app.post("/register", async (req, res) => {
   const { email, password } = req.body;
@@ -47,7 +56,6 @@ app.post("/register", async (req, res) => {
   }
 });
 
-const jwt = require("jsonwebtoken");
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -63,7 +71,7 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ userId: user._id }, "your-secret-key", {
+    const token = jwt.sign({ userId: user._id }, secretKey, {
       expiresIn: "1h",
     });
     return res.status(200).json({ token, success: true, message: "success" });
@@ -76,7 +84,7 @@ function authenticateToken(req, res, next) {
   const token = req.header("Authorization")?.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Access denied" });
 
-  jwt.verify(token, "your-secret-key", (err, user) => {
+  jwt.verify(token, secretKey, (err, user) => {
     if (err) return res.status(403).json({ error: "Invalid token" });
 
     req.user = user;
@@ -89,18 +97,6 @@ app.get("/protected", authenticateToken, (req, res) => {
   res.json({ message: "Protected route accessed successfully" });
 });
 
-const crypto = require("crypto");
-
-// Generate a random secret key
-const secretKey = crypto.randomBytes(32).toString("hex");
-console.log("Secret Key:", secretKey);
-
-const allowedOrigins = ["https://mohammedhelal591.github.io/my-movies-app/"];
-app.use(
-  cors({
-    origin: allowedOrigins,
-  })
-);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
