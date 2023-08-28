@@ -10,10 +10,6 @@ app.use(cors());
 
 // Your routes and other code will go here
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
 app.get("/", (req, res) => {
   return res.json({ message: "working...!" });
 });
@@ -99,9 +95,13 @@ const crypto = require("crypto");
 const secretKey = crypto.randomBytes(32).toString("hex");
 console.log("Secret Key:", secretKey);
 
-const allowedOrigins = ["http://localhost:5000"];
+const allowedOrigins = ["https://mohammedhelal591.github.io/my-movies-app/"];
 app.use(
   cors({
     origin: allowedOrigins,
   })
 );
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
