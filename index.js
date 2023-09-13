@@ -19,8 +19,6 @@ mongoose.connect(uri, {
 }).catch(err=> {
   console.log('Couldn\'t connect to DB');
 });
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 // Generate a random secret key
 const secretKey = crypto.randomBytes(32).toString("hex");
