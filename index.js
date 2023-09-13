@@ -6,7 +6,6 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const User = require("./models/User");
 const jwt = require("jsonwebtoken");
-const http = require('http');
 
 const uri =
   "mongodb+srv://admin:yT0GLc05LNI1ohDi@userdb.udxsivq.mongodb.net/?retryWrites=true&w=majority";
