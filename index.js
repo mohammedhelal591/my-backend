@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors"); // Import the cors package
 const app = express();
 const PORT = process.env.PORT || 9000;
-const crypto = require("node:crypto");
 const bcrypt = require("bcrypt");
 const User = require("./models/User");
 const jwt = require("jsonwebtoken");
@@ -21,7 +20,7 @@ mongoose.connect(uri, {
 });
 
 // Generate a random secret key
-const secretKey = crypto.randomBytes(32).toString("hex");
+const secretKey = 'bjkabsdfjkbajsdbfjskjdgnsjkldnkgjndklfngklndfklhnkdfnghkndfnjgh'
 
 const allowedOrigins = ["https://mohammedhelal591.github.io/my-movies-app/"];
 
