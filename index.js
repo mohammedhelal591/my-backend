@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors"); // Import the cors package
 const app = express();
 const PORT = process.env.PORT || 9000;
-const crypto = require("crypto");
+const crypto = require("node:crypto");
 const bcrypt = require("bcrypt");
 const User = require("./models/User");
 const jwt = require("jsonwebtoken");
@@ -34,8 +34,9 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
-  return res.json({ message: "working...!" });
+app.get("/", async (req, res) => {
+  const users = await User.find();
+  return res.json(users);
 });
 
 app.post("/register", async (req, res) => {
@@ -67,7 +68,7 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ error: "User not found" });
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
