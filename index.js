@@ -1,5 +1,5 @@
 const express = require("express");
-const cors = require("cors"); // Import the cors package
+const cors = require("cors"); 
 const app = express();
 const PORT = process.env.PORT || 9000;
 const bcrypt = require("bcrypt");
